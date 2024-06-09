@@ -15,6 +15,7 @@ import { fetchProductDetails } from '../features/products/productSlice';
 import Rating from '../components/Rating';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import { addToCart, removeFromCart } from '../features/cart/cartSlice';
 
 function ProductDetail({ history }) {
   const [qty, setQty] = useState(1);
@@ -26,14 +27,20 @@ function ProductDetail({ history }) {
     error,
   } = useSelector((store) => store.products);
   const dispatch = useDispatch();
+
   const { id } = useParams();
+  const { cartItems } = useSelector((store) => store.cart);
+  const item = cartItems.find((item) => item._id === product._id);
 
   useEffect(() => {
     dispatch(fetchProductDetails(id));
   }, [id, dispatch]);
 
   function handleAddToCart() {
-    history.push(`/cart/${id}?qty=${qty}`);
+    dispatch(addToCart({ ...product, qty: qty }));
+  }
+  function handleRemoveFromCart() {
+    dispatch(removeFromCart(product));
   }
 
   return (
@@ -102,7 +109,7 @@ function ProductDetail({ history }) {
                         <Form.Control
                           as="select"
                           value={qty}
-                          onChange={(e) => setQty(e.target.value)}
+                          onChange={(e) => setQty(Number(e.target.value))}
                         >
                           {[...Array(product.countInStock).keys()].map((x) => (
                             <option key={x + 1} value={x + 1}>
@@ -115,16 +122,40 @@ function ProductDetail({ history }) {
                   </ListGroup.Item>
                 )}
 
-                <ListGroup.Item>
-                  <Button
-                    onClick={handleAddToCart}
-                    className="btn-block"
-                    type="button"
-                    disabled={product.countInStock === 0}
-                  >
-                    Add to Cart
-                  </Button>
-                </ListGroup.Item>
+                {item ? (
+                  <ListGroup.Item>
+                    <Button
+                      style={{ width: '100%' }}
+                      onClick={handleRemoveFromCart}
+                      className="btn-block"
+                      type="button"
+                    >
+                      Remove from Cart
+                    </Button>
+                    <Link to="/cart">
+                      <Button
+                        style={{ width: '100%' }}
+                        type="button"
+                        variant="outline-dark"
+                        className="mt-1"
+                      >
+                        Show Cart
+                      </Button>
+                    </Link>
+                  </ListGroup.Item>
+                ) : (
+                  <ListGroup.Item>
+                    <Button
+                      style={{ width: '100%' }}
+                      onClick={handleAddToCart}
+                      className="btn-block"
+                      type="button"
+                      disabled={product.countInStock === 0}
+                    >
+                      Add to Cart
+                    </Button>
+                  </ListGroup.Item>
+                )}
               </ListGroup>
             </Card>
           </Col>
