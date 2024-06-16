@@ -5,8 +5,8 @@ export async function getProducts() {
     const response = await axios.get('/api/products/');
     return response.data;
   } catch (error) {
-    throw error.response && error.response.data.message
-      ? error.response.data.message
+    throw error.response && error.response.data.detail
+      ? error.response.data.detail
       : error.message;
   }
 }
@@ -16,8 +16,8 @@ export async function getProductDetails(id) {
     const response = await axios.get(`/api/products/${id}`);
     return response.data;
   } catch (error) {
-    throw error.response && error.response.data.message
-      ? error.response.data.message
+    throw error.response && error.response.data.detail
+      ? error.response.data.detail
       : error.message;
   }
 }
