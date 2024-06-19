@@ -1,7 +1,7 @@
 import { Container } from 'react-bootstrap';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-// import Header from './components/Header';
+import Header from './components/Header';
 import Footer from './components/Footer';
 
 import Home from './pages/Home';
@@ -11,6 +11,7 @@ import Cart from './pages/Cart';
 function App() {
   return (
     <BrowserRouter>
+      <Header />
       <main className="py-3">
         <Container>
           <Routes>

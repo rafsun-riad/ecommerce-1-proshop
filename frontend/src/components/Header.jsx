@@ -1,7 +1,16 @@
-import { Navbar, Nav, Container, Row, NavDropdown } from 'react-bootstrap';
+import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import SearchBox from './SearchBox';
+import { useDispatch, useSelector } from 'react-redux';
+import { userLogout } from '../features/users/usersSlice';
 
 function Header() {
+  const { userInfo } = useSelector((state) => state.users);
+  const dispatch = useDispatch();
+
+  function handleLogout() {
+    dispatch(userLogout);
+  }
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
@@ -26,7 +35,7 @@ function Header() {
                     <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
 
-                  <NavDropdown.Item onClick={logoutHandler}>
+                  <NavDropdown.Item onClick={handleLogout}>
                     Logout
                   </NavDropdown.Item>
                 </NavDropdown>
