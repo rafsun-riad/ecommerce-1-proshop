@@ -1,5 +1,5 @@
 function SearchBox() {
-  return <div>Search</div>;
+  return <div>SearchBox</div>;
 }
 
 export default SearchBox;

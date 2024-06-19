@@ -43,6 +43,7 @@ const productSlice = createSlice({
         state.isError = true;
         state.error = action.error?.message;
       })
+      // fetchproductdetails
       .addCase(fetchProductDetails.pending, (state) => {
         state.isLoading = true;
       })

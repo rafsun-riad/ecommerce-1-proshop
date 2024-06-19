@@ -11,7 +11,7 @@ import {
 
 const preloadedState = {
   cart: loadCartState(),
-  users: loadUserState(),
+  users: { userInfo: loadUserState() },
 };
 
 const store = configureStore({
@@ -25,7 +25,7 @@ const store = configureStore({
 
 store.subscribe(() => {
   saveCartState(store.getState().cart);
-  saveUserState(store.getState().users);
+  saveUserState(store.getState().users.userInfo);
 });
 
 export default store;

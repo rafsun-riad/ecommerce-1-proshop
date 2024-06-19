@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { userLogin } from './usersApi';
 
 const initialState = {
-  userInfo: {},
+  userInfo: null,
   userList: [],
   isLoading: false,
   isError: false,
@@ -11,9 +11,10 @@ const initialState = {
 
 export const fetchUserInfo = createAsyncThunk(
   'users/fetchUserInfo',
-  async (email, password) => {
-    const userInfo = await userLogin(email, password);
-    return userInfo;
+  async (userCredential) => {
+    const { email, password } = userCredential;
+    const userData = await userLogin(email, password);
+    return userData;
   }
 );
 
@@ -22,15 +23,17 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     userLogout: (state) => {
-      state.userInfo = {};
+      state.userInfo = null;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserInfo.pending, (state) => {
+        state.isError = false;
         state.isLoading = true;
       })
-      .addCase(fetchUserInfo.success, (state, action) => {
+      .addCase(fetchUserInfo.fulfilled, (state, action) => {
+        state.isError = false;
         state.isLoading = false;
         state.userInfo = action.payload;
       })

@@ -9,7 +9,7 @@ function Header() {
   const dispatch = useDispatch();
 
   function handleLogout() {
-    dispatch(userLogout);
+    dispatch(userLogout());
   }
   return (
     <header>
