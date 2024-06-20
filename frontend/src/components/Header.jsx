@@ -1,4 +1,5 @@
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { LinkContainer } from 'react-router-bootstrap';
 import SearchBox from './SearchBox';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,9 +8,11 @@ import { userLogout } from '../features/users/usersSlice';
 function Header() {
   const { userInfo } = useSelector((state) => state.users);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function handleLogout() {
     dispatch(userLogout());
+    navigate('/');
   }
   return (
     <header>
