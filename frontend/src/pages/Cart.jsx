@@ -9,18 +9,22 @@ import {
   Card,
   ListGroup,
 } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import Message from '../components/Message';
 import { removeFromCart, updateQuantiy } from '../features/cart/cartSlice';
 
 function Cart() {
   const { cartItems } = useSelector((store) => store.cart);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function handleQuantityUpdate(e, product) {
     dispatch(updateQuantiy({ ...product, qty: Number(e.target.value) }));
   }
 
-  function handleCheckout() {}
+  function handleCheckout() {
+    navigate('/shipping');
+  }
 
   return (
     <>

@@ -26,3 +26,19 @@ export function saveUserState(state) {
   }
   localStorage.setItem('userInfo', serializedData);
 }
+
+export function loadShippingAddress() {
+  const serializedData = localStorage.getItem('shippingAddress');
+  if (serializedData === null) {
+    return {};
+  }
+  return JSON.parse(serializedData);
+}
+
+export function saveShippingAddress(state) {
+  const serializedData = JSON.stringify(state);
+  if (serializedData === undefined) {
+    localStorage.setItem('shippingAddress', {});
+  }
+  localStorage.setItem('shippingAddress', serializedData);
+}

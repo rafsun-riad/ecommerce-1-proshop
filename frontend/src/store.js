@@ -4,13 +4,15 @@ import cartReducer from './features/cart/cartSlice';
 import userReducer from './features/users/usersSlice';
 import {
   loadCartState,
+  loadShippingAddress,
   loadUserState,
   saveCartState,
+  saveShippingAddress,
   saveUserState,
 } from './utility/localStorageUtils';
 
 const preloadedState = {
-  cart: loadCartState(),
+  cart: { cartItems: loadCartState(), shippingAddress: loadShippingAddress() },
   users: { userInfo: loadUserState() },
 };
 
@@ -24,8 +26,9 @@ const store = configureStore({
 });
 
 store.subscribe(() => {
-  saveCartState(store.getState().cart);
+  saveCartState(store.getState().cart.cartItems);
   saveUserState(store.getState().users.userInfo);
+  saveShippingAddress(store.getState().cart.shippingAddress);
 });
 
 export default store;
