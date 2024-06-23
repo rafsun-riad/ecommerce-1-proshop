@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addShippingAddress } from '../features/cart/cartSlice';
 
 import FormContainer from '../components/FormContainer';
+import CheckoutSteps from '../components/CheckoutSteps';
 
 function Shipping() {
   const { shippingAddress } = useSelector((state) => state.cart);
@@ -25,6 +26,7 @@ function Shipping() {
   }
   return (
     <FormContainer>
+      <CheckoutSteps step1 step2 />
       <h1>Shipping</h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="address">

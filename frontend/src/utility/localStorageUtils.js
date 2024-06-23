@@ -1,7 +1,7 @@
 export function loadCartState() {
   const serializedData = localStorage.getItem('cartItems');
   if (serializedData === null) {
-    return null;
+    return [];
   }
   return JSON.parse(serializedData);
 }
