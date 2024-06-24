@@ -42,3 +42,19 @@ export function saveShippingAddress(state) {
   }
   localStorage.setItem('shippingAddress', serializedData);
 }
+
+export function loadPaymentMethod() {
+  const serializedData = localStorage.getItem('paymentMethod');
+  if (serializedData === null) {
+    return null;
+  }
+  return JSON.parse(serializedData);
+}
+
+export function savePaymentMethodLocal(state) {
+  const serializedData = JSON.stringify(state);
+  if (serializedData === undefined) {
+    localStorage.setItem('shippingAddress', null);
+  }
+  localStorage.setItem('shippingAddress', serializedData);
+}
