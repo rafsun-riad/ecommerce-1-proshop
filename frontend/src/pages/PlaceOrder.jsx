@@ -20,14 +20,59 @@ function PlaceOrder() {
             <ListGroup.Item>
               <h2>Shipping</h2>
               <p>
-                <strong>Shipping:</strong>
-                {shippingAddress.address}, {shippingAddress.city},{' '}
+                <strong>Shipping: </strong>
+                {shippingAddress.address}, {shippingAddress.city}{' '}
                 {shippingAddress.postalCode}, {shippingAddress.country}
               </p>
             </ListGroup.Item>
+
+            <ListGroup.Item>
+              <h2>Payment Method</h2>
+              <p>
+                <strong>Method: </strong>
+                {paymenthMethod}
+              </p>
+            </ListGroup.Item>
+
+            <ListGroup.Item>
+              <h2>Order Item</h2>
+              {cartItems.length === 0 ? (
+                <Message variant="info">Your cart is empty</Message>
+              ) : (
+                <ListGroup variant="flush">
+                  {cartItems.map((item, index) => (
+                    <ListGroup.Item key={index}>
+                      <Row>
+                        <Col md={1}>
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fluid
+                            rounded
+                          />
+                        </Col>
+                        <Col>
+                          <Link to={`/products/${item._id}`}>{item.name}</Link>
+                        </Col>
+                        <Col md={4}>
+                          {item.qty} x ${item.price}= $
+                          {(item.qty * item.price).toFixed(2)}
+                        </Col>
+                      </Row>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              )}
+            </ListGroup.Item>
           </ListGroup>
         </Col>
-        <Col md={4}></Col>
+        <Col md={4}>
+          <Card>
+            <ListGroup variant="flush">
+              <ListGroup.Item></ListGroup.Item>
+            </ListGroup>
+          </Card>
+        </Col>
       </Row>
     </div>
   );
