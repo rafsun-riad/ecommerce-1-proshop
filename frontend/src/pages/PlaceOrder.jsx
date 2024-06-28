@@ -11,6 +11,8 @@ function PlaceOrder() {
   const { cartItems, shippingAddress, paymenthMethod } = useSelector(
     (state) => state.cart
   );
+
+  const itemsPrice = null;
   return (
     <div>
       <CheckoutSteps step1 step2 step3 step4 />
@@ -69,7 +71,13 @@ function PlaceOrder() {
         <Col md={4}>
           <Card>
             <ListGroup variant="flush">
-              <ListGroup.Item></ListGroup.Item>
+              <ListGroup.Item>
+                <h2>Order Summary</h2>
+              </ListGroup.Item>
+              <ListGroup.Item>
+                <Col>Item: </Col>
+                <Col>${itemsPrice}</Col>
+              </ListGroup.Item>
             </ListGroup>
           </Card>
         </Col>
