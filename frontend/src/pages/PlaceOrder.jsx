@@ -12,7 +12,18 @@ function PlaceOrder() {
     (state) => state.cart
   );
 
-  const itemsPrice = null;
+  const itemsPrice = cartItems
+    .reduce((acc, item) => acc + item.price * item.qty, 0)
+    .toFixed(2);
+  const shippingPrice = (itemsPrice > 100 ? 0 : 10).toFixed(2);
+  const taxPrice = (0.082 * itemsPrice).toFixed(2);
+  const totalPrice = (
+    Number(itemsPrice) +
+    Number(shippingPrice) +
+    Number(taxPrice)
+  ).toFixed(2);
+
+  function handlePlaceOrder() {}
   return (
     <div>
       <CheckoutSteps step1 step2 step3 step4 />
@@ -74,9 +85,36 @@ function PlaceOrder() {
               <ListGroup.Item>
                 <h2>Order Summary</h2>
               </ListGroup.Item>
+
               <ListGroup.Item>
                 <Col>Item: </Col>
                 <Col>${itemsPrice}</Col>
+              </ListGroup.Item>
+
+              <ListGroup.Item>
+                <Col>Shipping: </Col>
+                <Col>${shippingPrice}</Col>
+              </ListGroup.Item>
+
+              <ListGroup.Item>
+                <Col>Tax: </Col>
+                <Col>${taxPrice}</Col>
+              </ListGroup.Item>
+
+              <ListGroup.Item>
+                <Col>Total: </Col>
+                <Col>${totalPrice}</Col>
+              </ListGroup.Item>
+
+              <ListGroup.Item>
+                <Button
+                  type="button"
+                  className="btn-block"
+                  disabled={cartItems === 0}
+                  onClick={handlePlaceOrder}
+                >
+                  Place Order
+                </Button>
               </ListGroup.Item>
             </ListGroup>
           </Card>
