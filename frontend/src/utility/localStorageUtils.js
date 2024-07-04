@@ -54,7 +54,7 @@ export function loadPaymentMethod() {
 export function savePaymentMethodLocal(state) {
   const serializedData = JSON.stringify(state);
   if (serializedData === undefined) {
-    localStorage.setItem('shippingAddress', null);
+    localStorage.setItem('paymentMethod', null);
   }
-  localStorage.setItem('shippingAddress', serializedData);
+  localStorage.setItem('paymentMethod', serializedData);
 }

@@ -8,7 +8,7 @@ import CheckoutSteps from '../components/CheckoutSteps';
 import Message from '../components/Message';
 
 function PlaceOrder() {
-  const { cartItems, shippingAddress, paymenthMethod } = useSelector(
+  const { cartItems, shippingAddress, paymentMethod } = useSelector(
     (state) => state.cart
   );
 
@@ -43,7 +43,7 @@ function PlaceOrder() {
               <h2>Payment Method</h2>
               <p>
                 <strong>Method: </strong>
-                {paymenthMethod}
+                {paymentMethod}
               </p>
             </ListGroup.Item>
 
@@ -108,6 +108,7 @@ function PlaceOrder() {
 
               <ListGroup.Item>
                 <Button
+                  style={{ width: '100%' }}
                   type="button"
                   className="btn-block"
                   disabled={cartItems === 0}

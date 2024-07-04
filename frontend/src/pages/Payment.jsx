@@ -36,6 +36,7 @@ function Payment() {
               id="paypal"
               name="paymentMethod"
               checked
+              value={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value)}
             ></Form.Check>
           </Col>
