@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import productReducer from './features/products/productSlice';
 import cartReducer from './features/cart/cartSlice';
 import userReducer from './features/users/usersSlice';
+import orderReducer from './features/order/orderSlice';
 import {
   loadCartState,
   loadPaymentMethod,
@@ -27,6 +28,7 @@ const store = configureStore({
     products: productReducer,
     cart: cartReducer,
     users: userReducer,
+    order: orderReducer,
   },
   preloadedState,
 });

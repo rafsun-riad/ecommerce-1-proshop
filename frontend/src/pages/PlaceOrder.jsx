@@ -4,6 +4,8 @@ import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { fetchOrderCreate } from '../features/order/orderSlice';
+
 import CheckoutSteps from '../components/CheckoutSteps';
 import Message from '../components/Message';
 
@@ -11,6 +13,8 @@ function PlaceOrder() {
   const { cartItems, shippingAddress, paymentMethod } = useSelector(
     (state) => state.cart
   );
+
+  const { userInfo } = useSelector((state) => state.users);
 
   const itemsPrice = cartItems
     .reduce((acc, item) => acc + item.price * item.qty, 0)
