@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -13,6 +13,10 @@ function PlaceOrder() {
   const { cartItems, shippingAddress, paymentMethod } = useSelector(
     (state) => state.cart
   );
+  const { order, error, success } = useSelector((state) => state.order);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { userInfo } = useSelector((state) => state.users);
 
@@ -27,7 +31,26 @@ function PlaceOrder() {
     Number(taxPrice)
   ).toFixed(2);
 
-  function handlePlaceOrder() {}
+  useEffect(() => {
+    if (success) {
+      navigate(`/order/${order._id}`);
+    }
+  }, [success, navigate, order._id]);
+
+  function handlePlaceOrder() {
+    dispatch(
+      fetchOrderCreate({
+        userInfo,
+        orderItems: cartItems,
+        shippingAddress,
+        paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        taxPrice,
+        totalPrice,
+      })
+    );
+  }
   return (
     <div>
       <CheckoutSteps step1 step2 step3 step4 />
