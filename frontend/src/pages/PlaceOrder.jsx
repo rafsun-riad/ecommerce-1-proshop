@@ -1,19 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { fetchOrderCreate } from '../features/order/orderSlice';
+import { fetchOrderCreate, resetOrder } from '../features/order/orderSlice';
 
 import CheckoutSteps from '../components/CheckoutSteps';
 import Message from '../components/Message';
+import { emptyCartItems } from '../features/cart/cartSlice';
 
 function PlaceOrder() {
   const { cartItems, shippingAddress, paymentMethod } = useSelector(
     (state) => state.cart
   );
-  const { order, error, success } = useSelector((state) => state.order);
+  const { order, error, success, isError } = useSelector(
+    (state) => state.order
+  );
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,9 +36,11 @@ function PlaceOrder() {
 
   useEffect(() => {
     if (success) {
+      dispatch(emptyCartItems());
+      dispatch(resetOrder());
       navigate(`/order/${order._id}`);
     }
-  }, [success, navigate, order._id]);
+  }, [success, navigate, order._id, dispatch]);
 
   function handlePlaceOrder() {
     dispatch(
@@ -131,6 +136,10 @@ function PlaceOrder() {
               <ListGroup.Item>
                 <Col>Total: </Col>
                 <Col>${totalPrice}</Col>
+              </ListGroup.Item>
+
+              <ListGroup.Item>
+                {isError && <Message variant="danger">{error}</Message>}
               </ListGroup.Item>
 
               <ListGroup.Item>

@@ -3,16 +3,12 @@ import axios from 'axios';
 export async function createOrder(orderDetails) {
   const { userInfo } = orderDetails;
   try {
-    const response = await axios.post(
-      '/api/orders/add/',
-      {},
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userInfo.token}`,
-        },
-      }
-    );
+    const response = await axios.post('/api/orders/add/', orderDetails, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    });
 
     return response.data;
   } catch (error) {

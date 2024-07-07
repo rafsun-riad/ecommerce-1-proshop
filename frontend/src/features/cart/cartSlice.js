@@ -39,6 +39,9 @@ const cartSlice = createSlice({
         item.qty = action.payload.qty;
       }
     },
+    emptyCartItems: (state, action) => {
+      state.cartItems = [];
+    },
     addShippingAddress: (state, action) => {
       state.shippingAddress = action.payload;
     },
@@ -52,6 +55,7 @@ export const {
   addToCart,
   removeFromCart,
   updateQuantiy,
+  emptyCartItems,
   addShippingAddress,
   savePaymentMethod,
 } = cartSlice.actions;
