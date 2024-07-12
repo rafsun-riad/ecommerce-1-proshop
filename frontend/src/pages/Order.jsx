@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Button, Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
+import { Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -13,39 +13,44 @@ function Order() {
   const { orderDetails, error, isLoading, isError } = useSelector(
     (state) => state.order
   );
-  console.log(orderDetails);
-  const { order } = orderDetails;
 
   const { orderId } = useParams();
+
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const { userInfo } = useSelector((state) => state.users);
-  //   let itemsPrice = 0;
-  //   if (!isLoading && !isError) {
-  //     itemsPrice = order.orderItems
-  //       .reduce((acc, item) => acc + item.price * item.qty, 0)
-  //       .toFixed(2);
-  //   }
-
+  let itemsPrice = 0;
+  if (!isLoading && !isError) {
+    itemsPrice = orderDetails?.orderItems
+      ?.reduce((acc, item) => acc + item.price * item.qty, 0)
+      .toFixed(2);
+  }
   useEffect(() => {
-    if (!order || order._id !== Number(orderId)) {
-      dispatch(fetchOrderDetails({ userInfo, id: orderId }));
+    const data = { userInfo, id: orderId };
+    if (!orderDetails || orderDetails._id !== Number(orderId)) {
+      dispatch(fetchOrderDetails(data));
     }
-  }, [dispatch, orderId, userInfo, order]);
+  }, [dispatch, orderId, userInfo, orderDetails]);
 
-  return (
+  return isLoading ? (
+    <Loader />
+  ) : isError ? (
+    <Message variant="danger">{error}</Message>
+  ) : (
     <div>
       <Row>
+        <h2>Order: {orderId}</h2>
         <Col md={8}>
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h2>Shipping</h2>
               <p>
                 <strong>Shipping: </strong>
-                {order.shippingAddress.address}, {order.shippingAddress.city}{' '}
-                {order.shippingAddress.postalCode},{' '}
-                {order.shippingAddress.country}
+                {orderDetails.shippingAddress?.address},{' '}
+                {orderDetails.shippingAddress?.city}{' '}
+                {orderDetails.shippingAddress?.postalCode},{' '}
+                {orderDetails.shippingAddress?.country}
               </p>
             </ListGroup.Item>
 
@@ -53,17 +58,17 @@ function Order() {
               <h2>Payment Method</h2>
               <p>
                 <strong>Method: </strong>
-                {order.paymentMethod}
+                {orderDetails?.paymentMethod}
               </p>
             </ListGroup.Item>
 
             <ListGroup.Item>
               <h2>Order Item</h2>
-              {order.orderItems.length === 0 ? (
+              {orderDetails.orderItems?.length === 0 ? (
                 <Message variant="info">No order to show</Message>
               ) : (
                 <ListGroup variant="flush">
-                  {order.orderItems.map((item, index) => (
+                  {orderDetails?.orderItems?.map((item, index) => (
                     <ListGroup.Item key={index}>
                       <Row>
                         <Col md={1}>
@@ -98,22 +103,22 @@ function Order() {
 
               <ListGroup.Item>
                 <Col>Item: </Col>
-                <Col>${order.itemsPrice}</Col>
+                <Col>${itemsPrice}</Col>
               </ListGroup.Item>
 
               <ListGroup.Item>
                 <Col>Shipping: </Col>
-                <Col>${order.shippingPrice}</Col>
+                <Col>${orderDetails?.shippingPrice}</Col>
               </ListGroup.Item>
 
               <ListGroup.Item>
                 <Col>Tax: </Col>
-                <Col>${order.taxPrice}</Col>
+                <Col>${orderDetails?.taxPrice}</Col>
               </ListGroup.Item>
 
               <ListGroup.Item>
                 <Col>Total: </Col>
-                <Col>${order.totalPrice}</Col>
+                <Col>${orderDetails?.totalPrice}</Col>
               </ListGroup.Item>
             </ListGroup>
           </Card>

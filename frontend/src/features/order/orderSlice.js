@@ -64,7 +64,7 @@ const orderSlice = createSlice({
       .addCase(fetchOrderDetails.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.error = action.payload;
+        state.error = action.error?.message;
       });
   },
 });

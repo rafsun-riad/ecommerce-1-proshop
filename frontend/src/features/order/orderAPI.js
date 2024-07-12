@@ -20,6 +20,7 @@ export async function createOrder(orderDetails) {
 
 export async function getOrderDetails(data) {
   const { userInfo, id } = data;
+  console.log(userInfo, id);
 
   try {
     const response = await axios.get(`/api/orders/${id}/`, {

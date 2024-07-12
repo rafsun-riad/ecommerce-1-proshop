@@ -55,7 +55,7 @@ def addOrderItems(request):
         return Response(serializer.data)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getOrderBytId(request, pk):
     user = request.user
