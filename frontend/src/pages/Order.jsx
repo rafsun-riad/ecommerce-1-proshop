@@ -46,12 +46,29 @@ function Order() {
             <ListGroup.Item>
               <h2>Shipping</h2>
               <p>
+                <strong>Name: </strong>
+                {orderDetails.user.name}
+              </p>
+              <p>
+                <strong>Email: </strong>
+                <a href={`mailto:${orderDetails.user.email}`}>
+                  {orderDetails.user.email}
+                </a>
+              </p>
+              <p>
                 <strong>Shipping: </strong>
                 {orderDetails.shippingAddress?.address},{' '}
                 {orderDetails.shippingAddress?.city}{' '}
                 {orderDetails.shippingAddress?.postalCode},{' '}
                 {orderDetails.shippingAddress?.country}
               </p>
+              {orderDetails.isDelivered ? (
+                <Message variant="success">
+                  Delivered on {orderDetails.deliveredAt}
+                </Message>
+              ) : (
+                <Message variant="warning">Not Delivered</Message>
+              )}
             </ListGroup.Item>
 
             <ListGroup.Item>
@@ -60,6 +77,13 @@ function Order() {
                 <strong>Method: </strong>
                 {orderDetails?.paymentMethod}
               </p>
+              {orderDetails.isPaid ? (
+                <Message variant="success">
+                  Paid on {orderDetails.paidAt}
+                </Message>
+              ) : (
+                <Message variant="warning">Not Paid</Message>
+              )}
             </ListGroup.Item>
 
             <ListGroup.Item>
