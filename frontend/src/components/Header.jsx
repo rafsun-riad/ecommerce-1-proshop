@@ -4,6 +4,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import SearchBox from './SearchBox';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogout } from '../features/users/usersSlice';
+import { myOrderReset } from '../features/order/orderSlice';
 
 function Header() {
   const { userInfo } = useSelector((state) => state.users);
@@ -12,6 +13,7 @@ function Header() {
 
   function handleLogout() {
     dispatch(userLogout());
+    dispatch(myOrderReset());
     navigate('/');
   }
   return (

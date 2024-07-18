@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createOrder, getOrderDetails } from './orderAPI';
+import { createOrder, getAllOrder, getOrderDetails } from './orderAPI';
 
 const initialState = {
   order: {},
   orderDetails: {},
+  myOrders: [],
   isLoading: false,
   isError: false,
   success: false,
@@ -26,6 +27,14 @@ export const fetchOrderDetails = createAsyncThunk(
   }
 );
 
+export const fetchAllOrder = createAsyncThunk(
+  'order/fetchAllOrder',
+  async (data) => {
+    const allOrder = await getAllOrder(data);
+    return allOrder;
+  }
+);
+
 const orderSlice = createSlice({
   name: 'order',
   initialState,
@@ -35,6 +44,9 @@ const orderSlice = createSlice({
       state.error = null;
       state.isError = false;
       state.isLoading = false;
+    },
+    myOrderReset: (state) => {
+      state.myOrders = [];
     },
   },
   extraReducers: (builder) => {
@@ -65,10 +77,26 @@ const orderSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.error = action.error?.message;
+      })
+      .addCase(fetchAllOrder.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.error = null;
+      })
+      .addCase(fetchAllOrder.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = null;
+        state.myOrders = action.payload;
+      })
+      .addCase(fetchAllOrder, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error?.message;
       });
   },
 });
 
-export const { resetOrder } = orderSlice.actions;
+export const { resetOrder, myOrderReset } = orderSlice.actions;
 
 export default orderSlice.reducer;
