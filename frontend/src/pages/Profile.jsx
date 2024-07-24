@@ -10,6 +10,7 @@ import {
   fetchUserProfileUpdate,
   updateSuccessReset,
 } from '../features/users/usersSlice';
+import { getAllOrder } from '../features/order/orderAPI';
 
 function Profile() {
   const [name, setName] = useState('');
@@ -52,6 +53,10 @@ function Profile() {
     }
     return () => {};
   }, [dispatch, success]);
+
+  useEffect(() => {
+    dispatch(getAllOrder({ userInfo }));
+  }, [dispatch, userInfo]);
 
   function handleSubmit(e) {
     e.preventDefault();
