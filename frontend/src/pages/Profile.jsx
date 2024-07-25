@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { useNavigate, Link } from 'react-router-dom';
+import { Form, Button, Row, Col, Table } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Loader from '../components/Loader';
@@ -21,6 +21,12 @@ function Profile() {
   const { user, userInfo, isLoading, isError, error, success } = useSelector(
     (state) => state.users
   );
+  const {
+    myorders,
+    isLoading: orderLoader,
+    isError: orderError,
+    error: orderErrorMessage,
+  } = useSelector((state) => state.order);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userUpdateData = {
@@ -128,6 +134,45 @@ function Profile() {
 
       <Col md={9}>
         <h2>My Orders</h2>
+        {orderLoader ? (
+          <Loader />
+        ) : orderError ? (
+          <Message variant="danger">{orderErrorMessage}</Message>
+        ) : (
+          <Table striped responsive className="table-sm">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Paid</th>
+                <th>Delivered</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {myorders?.map((order) => (
+                <tr key={order._id}>
+                  <td>{order?._id}</td>
+                  <td>{order?.createdAt.substring(0, 10)}</td>
+                  <td>${order?.totalPrice}</td>
+                  <td>
+                    {order?.isPaid ? (
+                      order?.paidAt.substring(0, 10)
+                    ) : (
+                      <i className="fas fa-times" style={{ color: 'red' }}></i>
+                    )}
+                  </td>
+                  <td>
+                    <Link to={`/order/${order._id}`}>
+                      <Button className="btn-sm">Details</Button>
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </Col>
     </Row>
   );
