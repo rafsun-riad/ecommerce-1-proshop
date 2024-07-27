@@ -77,3 +77,21 @@ export async function updateUserProfile(userData) {
       : error.message;
   }
 }
+
+export async function getAllUser(data) {
+  const { userInfo } = data;
+
+  try {
+    const response = await axios.get('/api/users/', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response && error.response.data.detail
+      ? error.response.data.detail
+      : error.message;
+  }
+}

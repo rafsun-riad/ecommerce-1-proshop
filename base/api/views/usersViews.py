@@ -43,7 +43,7 @@ def updateUserProfile(request):
 @permission_classes([IsAdminUser])
 def getUsers(request):
     users = User.objects.all()
-    serializer = UserSerializer(user, many=True)
+    serializer = UserSerializer(users, many=True)
     return Response(serializer.data)
 
 

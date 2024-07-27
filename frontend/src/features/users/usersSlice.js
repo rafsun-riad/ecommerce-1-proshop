@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
+  getAllUser,
   getUserDetails,
   updateUserProfile,
   userLogin,
@@ -9,7 +10,7 @@ import {
 const initialState = {
   user: null,
   userInfo: null,
-  userList: [],
+  usersList: [],
   isLoading: false,
   isError: false,
   error: null,
@@ -51,6 +52,14 @@ export const fetchUserProfileUpdate = createAsyncThunk(
   }
 );
 
+export const fetchAllUsers = createAsyncThunk(
+  'users/fetchAllUsers',
+  async (data) => {
+    const allUsers = await getAllUser(data);
+    return allUsers;
+  }
+);
+
 const userSlice = createSlice({
   name: 'users',
   initialState,
@@ -69,6 +78,7 @@ const userSlice = createSlice({
       .addCase(fetchUserInfo.pending, (state) => {
         state.isError = false;
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(fetchUserInfo.fulfilled, (state, action) => {
         state.isError = false;
@@ -83,6 +93,7 @@ const userSlice = createSlice({
       .addCase(fetchUserRegister.pending, (state) => {
         state.isError = false;
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(fetchUserRegister.fulfilled, (state, action) => {
         state.isError = false;
@@ -97,6 +108,7 @@ const userSlice = createSlice({
       .addCase(fetchUserDetails.pending, (state) => {
         state.isError = false;
         state.isLoading = true;
+        state.error = null;
       })
       .addCase(fetchUserDetails.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -124,6 +136,21 @@ const userSlice = createSlice({
         state.isError = true;
         state.success = false;
         state.error = action.error?.message;
+      })
+      .addCase(fetchAllUsers.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.error = null;
+      })
+      .addCase(fetchAllUsers.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = false;
+        state.usersList = action.payload;
+      })
+      .addCase(fetchAllUsers.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error;
       });
   },
 });
