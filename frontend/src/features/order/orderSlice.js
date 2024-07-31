@@ -89,7 +89,7 @@ const orderSlice = createSlice({
         state.error = null;
         state.myOrders = action.payload;
       })
-      .addCase(fetchAllOrder, (state, action) => {
+      .addCase(fetchAllOrder.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.error = action.error?.message;
