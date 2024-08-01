@@ -10,4 +10,5 @@ urlpatterns = [
          name='update-user-profile'),
     path('', usersViews.getUsers, name='users'),
     path('register/', usersViews.registerUser, name='user-register'),
+    path('delete/<str:pk>', usersViews.deleteUser, name='delete-user')
 ]

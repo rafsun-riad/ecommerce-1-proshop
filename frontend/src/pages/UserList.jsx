@@ -5,7 +5,7 @@ import { Table, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { fetchAllUsers } from '../features/users/usersSlice';
+import { fetchAllUsers, fetchDeleteUser } from '../features/users/usersSlice';
 
 function UserList() {
   const { userInfo, usersList, isLoading, isError, error } = useSelector(
@@ -21,9 +21,13 @@ function UserList() {
     } else {
       navigate('/login');
     }
-  }, [dispatch, userInfo]);
+  }, [dispatch, userInfo, navigate]);
 
-  function handleDelete(id) {}
+  function handleDelete(id) {
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      dispatch(fetchDeleteUser({ id, userInfo }));
+    }
+  }
   return (
     <div>
       <h1>Users</h1>
