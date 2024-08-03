@@ -4,6 +4,7 @@ import {
   getAllUser,
   getUserById,
   getUserDetails,
+  updateUser,
   updateUserProfile,
   userLogin,
   userRegister,
@@ -76,6 +77,14 @@ export const fetchUserById = createAsyncThunk(
   async (data) => {
     const userById = await getUserById(data);
     return userById;
+  }
+);
+
+export const updateUserById = createAsyncThunk(
+  'users/updateUserById',
+  async (data) => {
+    const updatedUserData = await updateUser(data);
+    return updatedUserData;
   }
 );
 
@@ -199,6 +208,24 @@ const userSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.error = action.error;
+      })
+      .addCase(updateUserById.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(updateUserById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.success = true;
+        state.userDetailsById = action.payload;
+      })
+      .addCase(updateUserById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error;
+        state.success = false;
       });
   },
 });

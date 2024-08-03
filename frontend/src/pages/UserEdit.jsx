@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import FormContainer from '../components/FormContainer';
-import { fetchUserById } from '../features/users/usersSlice';
+import { fetchUserById, updateUserById } from '../features/users/usersSlice';
 
 function UserEdit() {
   const [name, setName] = useState();
@@ -14,13 +14,24 @@ function UserEdit() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const { userId } = useParams();
+  const navigate = useNavigate();
 
-  const { userInfo, userDetailsById, isLoading, isError, error } = useSelector(
-    (state) => state.users
-  );
+  const { userInfo, userDetailsById, isLoading, isError, error, success } =
+    useSelector((state) => state.users);
   const dispatch = useDispatch();
 
-  const userUpdateData = { name, email, isAdmin };
+  const userUpdateData = {
+    name,
+    email,
+    isAdmin,
+    userEditingId: userDetailsById._id,
+  };
+
+  useEffect(() => {
+    if (success) {
+      navigate('/admin/userlist');
+    }
+  }, [success, navigate]);
 
   useEffect(() => {
     if (!userDetailsById.name && userDetailsById._id !== Number(userId)) {
@@ -43,6 +54,7 @@ function UserEdit() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    dispatch(updateUserById({ userInfo, userUpdateData }));
   }
   return (
     <div>

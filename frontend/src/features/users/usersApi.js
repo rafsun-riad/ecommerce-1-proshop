@@ -130,3 +130,25 @@ export async function getUserById(data) {
       : error.message;
   }
 }
+
+export async function updateUser(data) {
+  const { userInfo, userUpdateData } = data;
+
+  try {
+    const response = await axios.put(
+      `/api/users/update/${userUpdateData.userEditingId}/`,
+      userUpdateData,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response && error.response.data.detail
+      ? error.response.data.detail
+      : error.message;
+  }
+}
