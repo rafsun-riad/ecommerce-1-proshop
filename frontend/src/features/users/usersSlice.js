@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   deleteUser,
   getAllUser,
+  getUserById,
   getUserDetails,
   updateUserProfile,
   userLogin,
@@ -12,6 +13,7 @@ const initialState = {
   user: null,
   userInfo: null,
   usersList: [],
+  userDetailsById: {},
   isLoading: false,
   isError: false,
   error: null,
@@ -66,6 +68,14 @@ export const fetchDeleteUser = createAsyncThunk(
   async (data) => {
     const deletedUser = await deleteUser(data);
     return deletedUser;
+  }
+);
+
+export const fetchUserById = createAsyncThunk(
+  'users/fetchUserById',
+  async (data) => {
+    const userById = await getUserById(data);
+    return userById;
   }
 );
 
@@ -171,6 +181,21 @@ const userSlice = createSlice({
         state.isError = false;
       })
       .addCase(fetchDeleteUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error;
+      })
+      .addCase(fetchUserById.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.error = null;
+      })
+      .addCase(fetchUserById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.userDetailsById = action.payload;
+      })
+      .addCase(fetchUserById.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.error = action.error;
