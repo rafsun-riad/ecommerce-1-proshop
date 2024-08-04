@@ -1,15 +1,17 @@
 import { useEffect } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { fetchAllUsers, fetchDeleteUser } from '../features/users/usersSlice';
+import { fetchProductsList } from '../features/products/productSlice';
 
-function UserList() {
-  const { userInfo, usersList, isLoading, isError, error } = useSelector(
-    (state) => state.users
+function ProductList() {
+  const { userInfo } = useSelector((state) => state.users);
+
+  const { products, isLoading, isError, error } = useSelector(
+    (state) => state.products
   );
 
   const dispatch = useDispatch();
@@ -17,20 +19,32 @@ function UserList() {
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      dispatch(fetchAllUsers({ userInfo }));
+      dispatch(fetchProductsList());
     } else {
       navigate('/login');
     }
   }, [dispatch, userInfo, navigate]);
 
   function handleDelete(id) {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      dispatch(fetchDeleteUser({ id, userInfo }));
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      dispatch();
     }
   }
+
+  function handleCreateProduct() {}
+
   return (
     <div>
-      <h1>Users</h1>
+      <Row className="align-items-center">
+        <Col>
+          <h1>Products</h1>
+        </Col>
+        <Col className="text-right">
+          <Button className="my-3" onClick={handleCreateProduct}>
+            <i className="fas fa-plus"></i>Create Product
+          </Button>
+        </Col>
+      </Row>
       {isLoading ? (
         <Loader />
       ) : isError ? (
@@ -41,26 +55,22 @@ function UserList() {
             <tr>
               <th>ID</th>
               <th>NAME</th>
-              <th>EMAIL</th>
-              <th>ADMIN</th>
+              <th>PRICE</th>
+              <th>CATEGORY</th>
+              <th>BRAND</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {usersList?.map((user) => (
-              <tr key={user._id}>
-                <td>{user._id}</td>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
+            {products?.map((product) => (
+              <tr key={product._id}>
+                <td>{product._id}</td>
+                <td>{product.name}</td>
+                <td>${product.price}</td>
+                <td>{product.category}</td>
+                <td>{product.brand}</td>
                 <td>
-                  {user.isAdmin ? (
-                    <i className="fas fa-check" style={{ color: 'green' }}></i>
-                  ) : (
-                    <i className="fas fa-xmark" style={{ color: 'red' }}></i>
-                  )}
-                </td>
-                <td>
-                  <LinkContainer to={`/admin/user/${user._id}/edit`}>
+                  <LinkContainer to={`/admin/product/${product._id}/edit`}>
                     <Button variant="light" className="btn-sm">
                       <i className="fas fa-edit"></i>
                     </Button>
@@ -68,7 +78,7 @@ function UserList() {
                   <Button
                     variant="danger"
                     className="btn-sm"
-                    onClick={() => handleDelete(user._id)}
+                    onClick={() => handleDelete(product._id)}
                     style={{ marginLeft: '20px' }}
                   >
                     <i className="fas fa-trash"></i>
@@ -83,4 +93,4 @@ function UserList() {
   );
 }
 
-export default UserList;
+export default ProductList;
