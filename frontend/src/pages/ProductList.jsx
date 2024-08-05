@@ -5,7 +5,10 @@ import { Table, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
-import { fetchProductsList } from '../features/products/productSlice';
+import {
+  deleteProductById,
+  fetchProductsList,
+} from '../features/products/productSlice';
 
 function ProductList() {
   const { userInfo } = useSelector((state) => state.users);
@@ -27,7 +30,7 @@ function ProductList() {
 
   function handleDelete(id) {
     if (window.confirm('Are you sure you want to delete this product?')) {
-      dispatch();
+      dispatch(deleteProductById({ userInfo, productId: id }));
     }
   }
 
