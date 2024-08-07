@@ -1,11 +1,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { deleteProduct, getProductDetails, getProducts } from './productsAPI';
+import {
+  createProduct,
+  deleteProduct,
+  getProductDetails,
+  getProducts,
+} from './productsAPI';
 
 const initialState = {
   products: [],
   productDetails: {},
   success: false,
   productDelete: {},
+  productCreated: {},
   isLoading: false,
   isError: false,
   error: null,
@@ -24,6 +30,14 @@ export const fetchProductDetails = createAsyncThunk(
   async (id) => {
     const product = await getProductDetails(id);
     return product;
+  }
+);
+
+export const fetchCreateProduct = createAsyncThunk(
+  'products/fetchCreateProduct',
+  async (data) => {
+    const createdProduct = await createProduct(data);
+    return createdProduct;
   }
 );
 
@@ -82,6 +96,25 @@ const productSlice = createSlice({
       .addCase(deleteProductById.rejected, (state, action) => {
         state.isError = true;
         state.isLoading = false;
+        state.success = false;
+        state.error = action.error;
+      })
+      .addCase(fetchCreateProduct.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(fetchCreateProduct.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = null;
+        state.success = true;
+        state.productCreated = action.payload;
+      })
+      .addCase(fetchCreateProduct.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
         state.success = false;
         state.error = action.error;
       });

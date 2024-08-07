@@ -38,3 +38,20 @@ export async function deleteProduct(data) {
       : error.message;
   }
 }
+
+export async function createProduct(data) {
+  const { productData, userInfo } = data;
+  try {
+    const response = await axios.post(`/api/products/create/`, productData, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response && error.response.data.detail
+      ? error.response.data.detail
+      : error.message;
+  }
+}
