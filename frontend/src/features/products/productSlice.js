@@ -52,6 +52,14 @@ export const deleteProductById = createAsyncThunk(
 const productSlice = createSlice({
   name: 'products',
   initialState,
+  reducers: {
+    resetSuccess: (state) => {
+      state.success = false;
+    },
+    resetCreatedProduct: (state) => {
+      state.productCreated = {};
+    },
+  },
   extraReducers: (builder) => {
     builder
       // fetch productlist
@@ -121,4 +129,5 @@ const productSlice = createSlice({
   },
 });
 
+export const { resetSuccess, resetCreatedProduct } = productSlice.actions;
 export default productSlice.reducer;

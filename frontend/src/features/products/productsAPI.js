@@ -40,9 +40,9 @@ export async function deleteProduct(data) {
 }
 
 export async function createProduct(data) {
-  const { productData, userInfo } = data;
+  const { userInfo } = data;
   try {
-    const response = await axios.post(`/api/products/create/`, productData, {
+    const response = await axios.post(`/api/products/create/`, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${userInfo.token}`,

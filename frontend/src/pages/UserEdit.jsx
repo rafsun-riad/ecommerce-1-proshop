@@ -88,7 +88,6 @@ function UserEdit() {
             </Form.Group>
 
             <Form.Group controlId="isadmin">
-              <Form.Label>Password</Form.Label>
               <Form.Check
                 type="checkbox"
                 label="Is Admin"

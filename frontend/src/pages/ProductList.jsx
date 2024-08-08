@@ -7,15 +7,15 @@ import Loader from '../components/Loader';
 import Message from '../components/Message';
 import {
   deleteProductById,
+  fetchCreateProduct,
   fetchProductsList,
 } from '../features/products/productSlice';
 
 function ProductList() {
   const { userInfo } = useSelector((state) => state.users);
 
-  const { products, isLoading, isError, error } = useSelector(
-    (state) => state.products
-  );
+  const { products, productCreated, isLoading, isError, error, success } =
+    useSelector((state) => state.products);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -26,7 +26,11 @@ function ProductList() {
     } else {
       navigate('/login');
     }
-  }, [dispatch, userInfo, navigate]);
+
+    if (success) {
+      navigate(`/admin/product/${productCreated._id}/edit`);
+    }
+  }, [dispatch, userInfo, navigate, productCreated, success]);
 
   function handleDelete(id) {
     if (window.confirm('Are you sure you want to delete this product?')) {
@@ -34,7 +38,9 @@ function ProductList() {
     }
   }
 
-  function handleCreateProduct() {}
+  function handleCreateProduct() {
+    dispatch(fetchCreateProduct({ userInfo }));
+  }
 
   return (
     <div>
