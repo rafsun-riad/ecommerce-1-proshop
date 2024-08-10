@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -10,6 +10,7 @@ import {
   fetchProductDetails,
   resetCreatedProduct,
   resetSuccess,
+  updateProductById,
 } from '../features/products/productSlice';
 
 function ProductEdit() {
@@ -25,6 +26,7 @@ function ProductEdit() {
 
   const dispatch = useDispatch();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const { productDetails, isLoading, isError, error } = useSelector(
     (state) => state.products
@@ -72,6 +74,8 @@ function ProductEdit() {
 
   function handleSubmit(e) {
     e.preventDefault();
+    dispatch(updateProductById({ userInfo, productUpdateData, id }));
+    navigate('/admin/productlist');
   }
   return (
     <div>

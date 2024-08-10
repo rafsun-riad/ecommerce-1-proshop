@@ -55,3 +55,25 @@ export async function createProduct(data) {
       : error.message;
   }
 }
+
+export async function updateProduct(data) {
+  const { userInfo, productUpdateData, id } = data;
+
+  try {
+    const response = await axios.put(
+      `/api/products/update/${id}`,
+      productUpdateData,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response && error.response.data.detail
+      ? error.response.data.detail
+      : error.message;
+  }
+}

@@ -4,6 +4,7 @@ import {
   deleteProduct,
   getProductDetails,
   getProducts,
+  updateProduct,
 } from './productsAPI';
 
 const initialState = {
@@ -46,6 +47,14 @@ export const deleteProductById = createAsyncThunk(
   async (data) => {
     const deletedProduct = await deleteProduct(data);
     return deletedProduct;
+  }
+);
+
+export const updateProductById = createAsyncThunk(
+  'products/updateProductById',
+  async (data) => {
+    const updatedProduct = await updateProduct(data);
+    return updatedProduct;
   }
 );
 
@@ -124,6 +133,21 @@ const productSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.success = false;
+        state.error = action.error;
+      })
+      .addCase(updateProductById.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.error = null;
+      })
+      .addCase(updateProductById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.productDetails = action.payload;
+      })
+      .addCase(updateProductById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
         state.error = action.error;
       });
   },
