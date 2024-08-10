@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
 
 import Loader from '../components/Loader';
 import Message from '../components/Message';
@@ -21,6 +22,7 @@ function ProductEdit() {
   const [category, setCategory] = useState('');
   const [countInStcok, setCountInStock] = useState(0);
   const [description, setDescription] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   const { userInfo } = useSelector((state) => state.users);
 
@@ -77,6 +79,28 @@ function ProductEdit() {
     dispatch(updateProductById({ userInfo, productUpdateData, id }));
     navigate('/admin/productlist');
   }
+
+  async function handleUploadFile(e) {
+    const file = e.target.files[0];
+    const formData = new FormData();
+
+    formData.append('image', file);
+    formData.append('product_id', id);
+
+    setUploading(true);
+
+    try {
+      const { data } = await axios.post('/api/products/upload/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setImage(data);
+      setUploading(false);
+    } catch (error) {
+      setUploading(false);
+    }
+  }
   return (
     <div>
       <Link to="/admin/productlist">Go Back</Link>
@@ -116,6 +140,13 @@ function ProductEdit() {
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               ></Form.Control>
+              <Form.File
+                id="image-file"
+                label="Choose File"
+                custom
+                onChange={handleUploadFile}
+              ></Form.File>
+              {uploading && <Loader />}
             </Form.Group>
 
             <Form.Group controlId="brand">

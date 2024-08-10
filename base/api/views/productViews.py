@@ -56,3 +56,13 @@ def updateProduct(request, pk):
     product.countInStock = data['countInStock']
     product.category = data['category']
     product.description = data['description']
+
+
+@api_view(['POST'])
+def uploadProductImage(request):
+    data = request.data
+    productId = data['product_id']
+    product = Product.objects.get(_id=productId)
+    product.image = request.FILES.get('image')
+    product.save()
+    return Response('Image was uploaded')
