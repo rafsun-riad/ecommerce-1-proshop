@@ -55,3 +55,21 @@ export async function getAllOrder(data) {
       : error.message;
   }
 }
+
+export async function adminGetAllOrders(data) {
+  const { userInfo } = data;
+  try {
+    const response = await axios.get(`/api/orders/`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error.response && error.response.data.detail
+      ? error.response.data.detail
+      : error.message;
+  }
+}

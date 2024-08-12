@@ -1,10 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { createOrder, getAllOrder, getOrderDetails } from './orderAPI';
+import {
+  adminGetAllOrders,
+  createOrder,
+  getAllOrder,
+  getOrderDetails,
+} from './orderAPI';
 
 const initialState = {
   order: {},
   orderDetails: {},
   myOrders: [],
+  allOrders: [],
   isLoading: false,
   isError: false,
   success: false,
@@ -31,6 +37,14 @@ export const fetchAllOrder = createAsyncThunk(
   'order/fetchAllOrder',
   async (data) => {
     const allOrder = await getAllOrder(data);
+    return allOrder;
+  }
+);
+
+export const fetchAdminAllOrder = createAsyncThunk(
+  'order/fetchAdminAllOrder',
+  async (data) => {
+    const allOrder = await adminGetAllOrders(data);
     return allOrder;
   }
 );
@@ -93,6 +107,20 @@ const orderSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.error = action.error?.message;
+      })
+      .addCase(fetchAdminAllOrder.pending, (state) => {
+        state.isError = false;
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchAdminAllOrder.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.allOrders = action.payload;
+      })
+      .addCase(fetchAdminAllOrder.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error;
       });
   },
 });
