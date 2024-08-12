@@ -1,11 +1,12 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
+from rest_framework import status
+
+from datetime import datetime
 
 from base.models import Product, Order, OrderItem, ShippingAddress
 from base.api.serializers import ProductSerializer, OrderSerializer, OrderItemSerializer
-
-from rest_framework import status
 
 
 @api_view(['POST'])
@@ -83,8 +84,20 @@ def getMyOrders(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated, IsAdminUser])
+@permission_classes([IsAdminUser])
 def getAllOrders(request):
     orders = Order.objects.all()
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAdminUser, IsAuthenticated])
+def updateOrderDelivered(request, pk):
+    order = Order.objects.get(_id=pk)
+
+    order.isDelevered = True
+    order.deliveredAt = datetime.now()
+    order.save()
+
+    return Response('Order was delivered')

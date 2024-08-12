@@ -73,3 +73,22 @@ export async function adminGetAllOrders(data) {
       : error.message;
   }
 }
+
+export async function updateOrderDeliver(data) {
+  const { userInfo, orderId } = data;
+
+  try {
+    const response = await axios.put(`/api/orders/${orderId}/deliver/`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error.response && error.response.data.detail
+      ? error.response.data.detail
+      : error.message;
+  }
+}

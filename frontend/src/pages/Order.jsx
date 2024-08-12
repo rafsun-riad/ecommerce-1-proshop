@@ -1,23 +1,26 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Row, Col, ListGroup, Image, Card } from 'react-bootstrap';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Row, Col, ListGroup, Image, Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { fetchOrderDetails } from '../features/order/orderSlice';
+import {
+  fetchOrderDetails,
+  orderUpdateDeliver,
+} from '../features/order/orderSlice';
 
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 
 function Order() {
-  const { orderDetails, error, isLoading, isError } = useSelector(
+  const { orderDetails, error, isLoading, isError, success } = useSelector(
     (state) => state.order
   );
 
   const { orderId } = useParams();
 
   const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { userInfo } = useSelector((state) => state.users);
   let itemsPrice = 0;
@@ -27,11 +30,18 @@ function Order() {
       .toFixed(2);
   }
   useEffect(() => {
+    if (!userInfo) {
+      navigate('/login');
+    }
     const data = { userInfo, id: orderId };
     if (!orderDetails || orderDetails._id !== Number(orderId)) {
       dispatch(fetchOrderDetails(data));
     }
-  }, [dispatch, orderId, userInfo, orderDetails]);
+  }, [dispatch, orderId, userInfo, orderDetails, navigate]);
+
+  function handleDelivered() {
+    dispatch(orderUpdateDeliver({ userInfo, orderId }));
+  }
 
   return isLoading ? (
     <Loader />
@@ -145,6 +155,17 @@ function Order() {
                 <Col>${orderDetails?.totalPrice}</Col>
               </ListGroup.Item>
             </ListGroup>
+            {userInfo && userInfo.isAdmin && !orderDetails.isDelivered && (
+              <ListGroup.Item>
+                <Button
+                  type="button"
+                  className="btn btn-block"
+                  onClick={handleDelivered}
+                >
+                  Mark As Delivered
+                </Button>
+              </ListGroup.Item>
+            )}
           </Card>
         </Col>
       </Row>

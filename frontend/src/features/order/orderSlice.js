@@ -4,6 +4,7 @@ import {
   createOrder,
   getAllOrder,
   getOrderDetails,
+  updateOrderDeliver,
 } from './orderAPI';
 
 const initialState = {
@@ -11,6 +12,7 @@ const initialState = {
   orderDetails: {},
   myOrders: [],
   allOrders: [],
+  orderDelivered: {},
   isLoading: false,
   isError: false,
   success: false,
@@ -46,6 +48,14 @@ export const fetchAdminAllOrder = createAsyncThunk(
   async (data) => {
     const allOrder = await adminGetAllOrders(data);
     return allOrder;
+  }
+);
+
+export const orderUpdateDeliver = createAsyncThunk(
+  'order/orderUpdateDeliver',
+  async (data) => {
+    const deliveredOrder = await updateOrderDeliver(data);
+    return deliveredOrder;
   }
 );
 
@@ -118,6 +128,22 @@ const orderSlice = createSlice({
         state.allOrders = action.payload;
       })
       .addCase(fetchAdminAllOrder.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error;
+      })
+      .addCase(orderUpdateDeliver.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.error = null;
+        state.success = false;
+      })
+      .addCase(orderUpdateDeliver.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.success = true;
+        state.orderDelivered = action.payload;
+      })
+      .addCase(orderUpdateDeliver.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.error = action.error;
