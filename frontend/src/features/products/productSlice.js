@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   createProduct,
+  createReview,
   deleteProduct,
   getProductDetails,
   getProducts,
@@ -13,6 +14,7 @@ const initialState = {
   success: false,
   productDelete: {},
   productCreated: {},
+  productReview: {},
   isLoading: false,
   isError: false,
   error: null,
@@ -55,6 +57,14 @@ export const updateProductById = createAsyncThunk(
   async (data) => {
     const updatedProduct = await updateProduct(data);
     return updatedProduct;
+  }
+);
+
+export const createProductReview = createAsyncThunk(
+  'products/createProductReview',
+  async (data) => {
+    const createdReview = await createReview(data);
+    return createdReview;
   }
 );
 
@@ -146,6 +156,21 @@ const productSlice = createSlice({
         state.productDetails = action.payload;
       })
       .addCase(updateProductById.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.error = action.error;
+      })
+      .addCase(createProductReview.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.error = null;
+      })
+      .addCase(createProductReview.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.productReview = action.payload;
+      })
+      .addCase(createProductReview.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.error = action.error;
