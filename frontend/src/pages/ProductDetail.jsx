@@ -10,7 +10,10 @@ import {
   Form,
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProductDetails } from '../features/products/productSlice';
+import {
+  createProductReview,
+  fetchProductDetails,
+} from '../features/products/productSlice';
 
 import Rating from '../components/Rating';
 import Loader from '../components/Loader';
@@ -37,6 +40,8 @@ function ProductDetail({ history }) {
   const { cartItems } = useSelector((store) => store.cart);
   const item = cartItems.find((item) => item._id === product._id);
 
+  const reviewData = { rating, comment };
+
   useEffect(() => {
     dispatch(fetchProductDetails(id));
   }, [id, dispatch]);
@@ -46,6 +51,11 @@ function ProductDetail({ history }) {
   }
   function handleRemoveFromCart() {
     dispatch(removeFromCart(product));
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    dispatch(createProductReview({ userInfo, id, reviewData }));
   }
 
   return (
@@ -180,8 +190,52 @@ function ProductDetail({ history }) {
                   <ListGroup.Item key={review._id}>
                     <strong>{review.name}</strong>
                     <Rating value={review.rating} color="#f8e825" />
+                    <p>{review.createdAt.substring(0, 10)}</p>
+                    <p>{review.comment}</p>
                   </ListGroup.Item>
                 ))}
+                <ListGroup.Item>
+                  <h4>Write a review</h4>
+                  {userInfo ? (
+                    <Form onSubmit={handleSubmit}>
+                      <Form.Group controlId="rating">
+                        <Form.Label>Rating</Form.Label>
+                        <Form.Control
+                          as="select"
+                          value={rating}
+                          onChange={(e) => setRating(e.target.value)}
+                        >
+                          <option value="">Select...</option>
+                          <option value="1">1 - Poor</option>
+                          <option value="2">2 - Fair</option>
+                          <option value="3">3 - Good</option>
+                          <option value="4">4 - Very Good</option>
+                          <option value="5">5 - Excellent</option>
+                        </Form.Control>
+                      </Form.Group>
+                      <Form.Group controlId="comment">
+                        <Form.Label>Review</Form.Label>
+                        <Form.Control
+                          as="textarea"
+                          rows="5"
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                        ></Form.Control>
+                      </Form.Group>
+                      <Button
+                        disabled={isLoading}
+                        type="submit"
+                        variant="primary"
+                      >
+                        Submit
+                      </Button>
+                    </Form>
+                  ) : (
+                    <Message variant="info">
+                      Please <Link to="/login">Login</Link> to write a review.
+                    </Message>
+                  )}
+                </ListGroup.Item>
               </ListGroup>
             </Col>
           </Row>
