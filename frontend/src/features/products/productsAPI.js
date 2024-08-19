@@ -1,9 +1,15 @@
 import axios from 'axios';
 
-export async function getProducts() {
+export async function getProducts(data) {
+  const { keyword } = data;
   try {
-    const response = await axios.get('/api/products/');
-    return response.data;
+    if (!keyword) {
+      const response = await axios.get('/api/products/');
+      return response.data;
+    } else {
+      const response = await axios.get(`/api/products/?keyword=${keyword}`);
+      return response.data;
+    }
   } catch (error) {
     throw error.response && error.response.data.detail
       ? error.response.data.detail

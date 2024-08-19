@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
+
 import { fetchProductsList } from '../features/products/productSlice';
 
 import Product from '../components/Product';
@@ -13,9 +15,13 @@ function Home() {
     (state) => state.products
   );
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const keyword = searchParams.get('keyword');
+
   useEffect(() => {
-    dispatch(fetchProductsList());
-  }, [dispatch]);
+    dispatch(fetchProductsList({ keyword }));
+  }, [dispatch, keyword]);
 
   return (
     <div>
