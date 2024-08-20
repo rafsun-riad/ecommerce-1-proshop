@@ -12,6 +12,8 @@ const initialState = {
   products: [],
   productDetails: {},
   success: false,
+  page: null,
+  pages: null,
   productDelete: {},
   productCreated: {},
   productReview: {},
@@ -87,7 +89,9 @@ const productSlice = createSlice({
       })
       .addCase(fetchProductsList.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.products = action.payload;
+        state.products = action.payload.products;
+        state.page = action.payload.page;
+        state.pages = action.payload.pages;
       })
       .addCase(fetchProductsList.rejected, (state, action) => {
         state.isLoading = false;
@@ -107,6 +111,7 @@ const productSlice = createSlice({
         state.isError = true;
         state.error = action.error?.message;
       })
+      // deleting product
       .addCase(deleteProductById.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
