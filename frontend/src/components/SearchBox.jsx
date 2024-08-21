@@ -10,7 +10,7 @@ function SearchBox() {
     e.preventDefault();
 
     if (keyword) {
-      navigate(`/?keyword=${keyword}`);
+      navigate(`/?keyword=${keyword}&page=1`);
     } else {
       return;
     }
