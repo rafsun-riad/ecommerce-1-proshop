@@ -3,6 +3,8 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Table, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
+
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import {
@@ -19,10 +21,12 @@ function ProductList() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const keyword = searchParams.get('keyword');
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      dispatch(fetchProductsList());
+      dispatch(fetchProductsList({ keyword }));
     } else {
       navigate('/login');
     }
@@ -30,7 +34,7 @@ function ProductList() {
     if (success) {
       navigate(`/admin/product/${productCreated._id}/edit`);
     }
-  }, [dispatch, userInfo, navigate, productCreated, success]);
+  }, [dispatch, userInfo, navigate, productCreated, success, keyword]);
 
   function handleDelete(id) {
     if (window.confirm('Are you sure you want to delete this product?')) {
