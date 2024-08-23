@@ -5,11 +5,13 @@ import {
   deleteProduct,
   getProductDetails,
   getProducts,
+  getTopProducts,
   updateProduct,
 } from './productsAPI';
 
 const initialState = {
   products: [],
+  topProducts: [],
   productDetails: {},
   success: false,
   page: null,
@@ -27,6 +29,14 @@ export const fetchProductsList = createAsyncThunk(
   async (data) => {
     const products = await getProducts(data);
     return products;
+  }
+);
+
+export const fetchTopPorducts = createAsyncThunk(
+  'products/fetchTopProducts',
+  async () => {
+    const topProducts = await getTopProducts();
+    return topProducts;
   }
 );
 
@@ -178,6 +188,20 @@ const productSlice = createSlice({
       .addCase(createProductReview.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
+        state.error = action.error;
+      })
+      .addCase(fetchTopPorducts.pending, (state) => {
+        state.isError = false;
+        state.error = null;
+        state.isLoading = true;
+      })
+      .addCase(fetchTopPorducts.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.topProducts = action.payload;
+      })
+      .addCase(fetchTopPorducts.rejected, (state, action) => {
+        state.isError = true;
+        state.isLoading = false;
         state.error = action.error;
       });
   },
