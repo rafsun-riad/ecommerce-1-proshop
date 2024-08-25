@@ -9,6 +9,7 @@ import Product from '../components/Product';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import Paginate from '../components/Paginate';
+import ProductCarousel from '../components/ProductCarousel';
 
 function Home() {
   const dispatch = useDispatch();
@@ -16,7 +17,7 @@ function Home() {
     (state) => state.products
   );
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const keyword = searchParams.get('keyword');
 
@@ -26,6 +27,7 @@ function Home() {
 
   return (
     <div>
+      {!keyword && <ProductCarousel />}
       <h1>Latest Product</h1>
       {isLoading ? (
         <Loader />
